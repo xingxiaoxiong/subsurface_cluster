@@ -70,21 +70,21 @@ def train(a):
                 training_loss += results['loss']
             training_loss /= loader.ntrain
 
+            if should(a.validation_freq):
+                print('validating model')
+                validation_loss = 0
+                for _ in range(loader.nval):
+                    X_, y_ = loader.next_batch(1)
+                    loss = sess.run(val_cnn.loss, {val_cnn.input: X_, val_cnn.target: y_})
+                    validation_loss += loss
+                validation_loss /= loader.nval
+                
             if should(a.summary_freq):
                 summary = sess.run(merged, {train_cnn.input: X, train_cnn.target: y})
                 writer.add_summary(summary, global_step=epoch)
                 print("recording summary")
                 with open(os.path.join(a.output_dir, 'loss_record.txt'), "a") as loss_file:
                     loss_file.write("%s\t%s\t%s\n" % (epoch, training_loss, validation_loss))
-
-            if should(a.validation_freq):
-                print('validating model')
-                validation_loss = 0
-                for _ in range(loader.nval):
-                    X, y = loader.next_batch(1)
-                    loss = sess.run(val_cnn.loss, {val_cnn.input: X, val_cnn.target: y})
-                    validation_loss += loss
-                validation_loss /= loader.nval
 
             if should(a.progress_freq):
                 rate = (epoch + 1) / (time.time() - start)
