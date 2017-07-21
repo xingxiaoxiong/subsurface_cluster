@@ -7,11 +7,6 @@ import numpy as np
 import pickle
 
 
-def cluster(data, n_clusters):
-    kmeans = KMeans(n_clusters).fit(data)
-    return kmeans
-
-
 def run_cluster(source, n_clusters):
     filenames = os.listdir(source)
     filenames = [filename for filename in filenames if re.match(npy_regx, filename)]
@@ -22,7 +17,7 @@ def run_cluster(source, n_clusters):
         datum = np.load(path)
         data.append(datum[0][:, :, 0:2].reshape(-1))
     data = np.asarray(data)
-    kmeans = cluster(data, n_clusters)
+    kmeans = KMeans(n_clusters).fit(data)
     with open('./data/generated/kmeans', 'wb') as file:
         pickle.dump(kmeans, file)
 

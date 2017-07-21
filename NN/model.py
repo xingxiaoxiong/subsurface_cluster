@@ -100,7 +100,7 @@ class CNN:
     def conv(self, batch_input, out_channels, stride):
         in_channels = batch_input.get_shape()[3]
         filter = tf.get_variable("filter", [1, 1, in_channels, out_channels], dtype=tf.float32,
-                                 initializer=tf.random_normal_initializer(0, 0.3))
+                                 initializer=tf.random_normal_initializer(0, 0.02))
         # [batch, in_height, in_width, in_channels], [filter_width, filter_height, in_channels, out_channels]
         #     => [batch, out_height, out_width, out_channels]
         padded_input = tf.pad(batch_input, [[0, 0], [0, 0], [0, 0], [0, 0]], mode="CONSTANT")
