@@ -19,6 +19,7 @@ class Loader:
         self.nbatches = int(math.floor(len(self.file_paths) / batch_size))
 
         self.file_paths = np.array(self.file_paths[:batch_size * self.nbatches])
+        np.random.shuffle(self.file_paths)
         self.file_paths = np.split(self.file_paths, self.nbatches)
 
         self.ntrain = int(self.nbatches * split_fractions[0])

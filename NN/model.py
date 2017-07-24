@@ -109,7 +109,7 @@ class CNN:
 
     def conv_layer(self, bottom, name, filter_num):
         with tf.variable_scope(name):
-            conv = self.conv(bottom, filter_num, 1)
-            # conv = tf.layers.conv2d(bottom, filter_num, 1, (1, 1), padding='valid')
+            # conv = self.conv(bottom, filter_num, 1)
+            conv = tf.layers.conv2d(bottom, filter_num, 1, (1, 1), padding='valid', kernel_initializer=tf.random_normal_initializer(0, 0.02))
             relu = tf.nn.relu(conv)
         return relu
