@@ -41,7 +41,7 @@ def generate_data(data_dir, count, save_dir):
     for h in range(height):
         for w in range(width):
             target_point_position = front_position_data[h, w]
-            if target_point_position[0] != 0.0 and target_point_position[1] != 0.0 and target_point_position[2] != 0.0:
+            if target_point_position[0] != 0.0 or target_point_position[1] != 0.0 or target_point_position[2] != 0.0:
                 object_mask[h, w, :] = 1
 
     # img = Image.fromarray(object_mask.astype('uint8') * 255)
@@ -64,7 +64,7 @@ def generate_data(data_dir, count, save_dir):
                 sample_w = w + dw
 
                 target_point_position = front_position_data[sample_h, sample_w]
-                if target_point_position[0] != 0.0 and target_point_position[1] != 0.0 and target_point_position[2] != 0.0:
+                if target_point_position[0] != 0.0 or target_point_position[1] != 0.0 or target_point_position[2] != 0.0:
                     sample_mask[sample_h, sample_w] = 255
 
     for h in range(height):
