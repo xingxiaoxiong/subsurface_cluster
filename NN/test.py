@@ -62,7 +62,7 @@ def calc_labels(data_dir, kmeans_path):
     return pixel_label
 
 
-def draw(data_dir, kmeans_path, a, checkpoints):
+def draw(data_dir, kmeans_path, a, checkpoints, output_path):
     front_position = np.load(os.path.join(data_dir, 'front_position.npy'))
     back_position = np.load(os.path.join(data_dir, 'back_position.npy'))
     front_lit = np.load(os.path.join(data_dir, 'front_irradiance.npy'))
@@ -78,6 +78,7 @@ def draw(data_dir, kmeans_path, a, checkpoints):
             if pixel_label[h, w] != -1:
                 clusters[pixel_label[h, w]].append([h, w])
 
+    tf.reset_default_graph()
     model = CNN(height, width, depth, a)
     model.build_graph(False, False)
     saver = tf.train.Saver()
