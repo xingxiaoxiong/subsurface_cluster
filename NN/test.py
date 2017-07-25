@@ -129,7 +129,7 @@ def draw(data_dir, kmeans_path, a, checkpoints, output_path):
                     pos = batch[i]
                     image[pos[0], pos[1]] = color
 
-    np.save('output', image)
+    np.save(output_path, image)
 
 if __name__ == '__main__':
     pass
