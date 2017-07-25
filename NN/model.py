@@ -15,13 +15,14 @@ class CNN:
         with tf.variable_scope('cnn', reuse=reuse):
             self.output = self.input
 
-            filter_nums = [64, 128, 256, 128, 64, 3]
-            for i, filter_num in enumerate(filter_nums):
-                self.output = self.conv_layer(self.output, 'conv_%s' % i, filter_num)
+            # filter_nums = [64, 128, 256, 128, 64, 3]
+            # for i, filter_num in enumerate(filter_nums):
+            #     self.output = self.conv_layer(self.output, 'conv_%s' % i, filter_num)
 
             # with tf.variable_scope('conv_final'):
             #     self.output = self.conv(self.output, 3, 1)
-            self.output = tf.reduce_sum(self.output, axis=[1, 2])
+
+            # self.output = tf.reduce_sum(self.output, axis=[1, 2])
 
             # self.shape = tf.shape(self.output)
             # self.output = tf.reshape(self.output, [self.shape[0], self.height * self.width * self.depth])
@@ -77,11 +78,17 @@ class CNN:
             #     self.output = tf.layers.dense(self.fc7, units=3, activation=None, use_bias=True, name="fc8")
             #     # self.output = tf.layers.dense(self.fc7, units=3, activation=tf.nn.sigmoid, use_bias=True, name="fc8")
 
-            # self.color = tf.nn.sigmoid(self.output)
-            self.color = self.output
+            filter_nums = [16, 32, 64, 128]
+            for i, filter_num in enumerate(filter_nums):
+                self.output = tf.layers.conv2d(self.output, filter_num, kernel_size=2, strides=(2, 2), padding='valid', kernel_initializer=tf.contrib.layers.xavier_initializer())
+                self.output = tf.nn.elu(self.output)
+                self.output = self.avg_pool(self.output, 'pool_%s' % i)
 
-            # output = tf.reshape(self.output, [-1])
-            # target = tf.reshape(self.target, [-1])
+            self.output = tf.reshape(self.output, [tf.shape(self.output)[0], filter_nums[-1]])
+            print(self.output)
+            self.output = tf.layers.dense(self.output, units=3, kernel_initializer=tf.contrib.layers.xavier_initializer())
+
+            self.color = self.output
 
             self.loss = tf.reduce_mean(tf.square(tf.subtract(self.target, self.output)))
             # self.loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=output, labels=target))
@@ -111,5 +118,5 @@ class CNN:
         with tf.variable_scope(name):
             # conv = self.conv(bottom, filter_num, 1)
             conv = tf.layers.conv2d(bottom, filter_num, 1, (1, 1), padding='valid', kernel_initializer=tf.random_normal_initializer(0, 0.02))
-            relu = tf.nn.relu(conv)
+            relu = tf.nn.elu(conv)
         return relu
